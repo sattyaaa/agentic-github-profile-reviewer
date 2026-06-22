@@ -1,21 +1,21 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { 
-  Github, 
-  User, 
-  Users, 
-  Award, 
-  CheckCircle2, 
-  AlertTriangle, 
-  Briefcase, 
-  FileText, 
-  BookOpen, 
-  ExternalLink, 
-  Copy, 
-  Check, 
-  RotateCcw, 
-  Code2, 
+import {
+  Github,
+  User,
+  Users,
+  Award,
+  CheckCircle2,
+  AlertTriangle,
+  Briefcase,
+  FileText,
+  BookOpen,
+  ExternalLink,
+  Copy,
+  Check,
+  RotateCcw,
+  Code2,
   ChevronRight,
   TrendingUp,
   Terminal,
@@ -110,7 +110,7 @@ const STEP_ORDER: StepKey[] = ["scraping_github", "analyzing_repos", "writing_re
 
 const formatMarkdownText = (text: string) => {
   if (!text) return "";
-  
+
   // Replace double asterisks **text** with bold strong tags
   const parts = text.split(/\*\*([^*]+)\*\*/g);
   return parts.map((part, index) => {
@@ -134,7 +134,7 @@ export default function Home() {
   const [report, setReport] = useState<ReviewReport | null>(null);
   const [copiedBullet, setCopiedBullet] = useState<string | null>(null);
   const [copiedIndex, setCopiedIndex] = useState<string | null>(null);
-  
+
   const eventSourceRef = useRef<EventSource | null>(null);
   const logEndRef = useRef<HTMLDivElement | null>(null);
 
@@ -178,7 +178,7 @@ export default function Home() {
     eventSource.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data);
-        
+
         if (data.status === "failed") {
           setError(data.message);
           setLoading(false);
@@ -258,7 +258,7 @@ export default function Home() {
             </div>
             <div>
               <h1 className="font-bold text-lg md:text-xl tracking-tight bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">
-                Antigravity Reviewer
+                Agentic GitHub Reviewer
               </h1>
               <p className="text-[10px] text-teal-400 uppercase tracking-widest font-semibold">Multi-Agent System</p>
             </div>
@@ -272,7 +272,7 @@ export default function Home() {
 
       {/* Main Container */}
       <main className="flex-1 max-w-7xl w-full mx-auto p-4 md:p-8 flex flex-col justify-center">
-        
+
         {/* Landing View (Before submit) */}
         {!currentStep && !report && (
           <div className="max-w-2xl mx-auto text-center py-12 md:py-20 animate-slide-up">
@@ -324,28 +324,26 @@ export default function Home() {
         {currentStep && currentStep !== "completed" && (
           <div className="max-w-3xl mx-auto w-full glass-panel p-6 md:p-8 rounded-3xl animate-slide-up my-8">
             <h3 className="text-xl md:text-2xl font-bold mb-6 text-center">Multi-Agent Review Pipeline</h3>
-            
+
             {/* Horizontal Stepper */}
             <div className="grid grid-cols-5 gap-2 mb-8 relative">
               <div className="absolute top-5 left-4 right-4 h-0.5 bg-slate-800 z-0"></div>
               {STEP_ORDER.map((step, idx) => {
                 const isActive = currentStep === step;
                 const isFinished = STEP_ORDER.indexOf(currentStep as StepKey) > idx;
-                
+
                 return (
                   <div key={step} className="flex flex-col items-center relative z-10 text-center">
-                    <div className={`w-10 h-10 rounded-full flex items-center justify-center border font-bold text-xs transition-all duration-500 ${
-                      isActive 
-                        ? "bg-teal-500 border-teal-400 text-slate-950 shadow-lg shadow-teal-500/30 scale-110" 
-                        : isFinished 
-                          ? "bg-indigo-950 border-indigo-500 text-indigo-400" 
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center border font-bold text-xs transition-all duration-500 ${isActive
+                        ? "bg-teal-500 border-teal-400 text-slate-950 shadow-lg shadow-teal-500/30 scale-110"
+                        : isFinished
+                          ? "bg-indigo-950 border-indigo-500 text-indigo-400"
                           : "bg-slate-950 border-slate-800 text-slate-600"
-                    }`}>
+                      }`}>
                       {isFinished ? <CheckCircle2 size={16} /> : idx + 1}
                     </div>
-                    <span className={`text-[10px] md:text-xs mt-2 font-medium hidden md:block ${
-                      isActive ? "text-teal-400 font-bold" : "text-slate-500"
-                    }`}>
+                    <span className={`text-[10px] md:text-xs mt-2 font-medium hidden md:block ${isActive ? "text-teal-400 font-bold" : "text-slate-500"
+                      }`}>
                       {STEPS[step].label}
                     </span>
                   </div>
@@ -370,7 +368,7 @@ export default function Home() {
                 <Terminal size={14} />
                 <span>Agent Logs Console</span>
               </div>
-              
+
               {progressLog.map((log, index) => (
                 <div key={index} className="flex items-start gap-2 leading-relaxed animate-slide-up">
                   <span className="text-slate-600 select-none">&gt;</span>
@@ -387,8 +385,8 @@ export default function Home() {
                 <div>
                   <h5 className="font-bold text-sm">Execution Error</h5>
                   <p className="text-xs mt-1">{error}</p>
-                  <button 
-                    onClick={handleReset} 
+                  <button
+                    onClick={handleReset}
                     className="mt-3 text-xs bg-rose-500/20 hover:bg-rose-500/30 text-rose-400 px-3 py-1.5 rounded-lg font-bold transition flex items-center gap-1.5 border border-rose-500/30 cursor-pointer"
                   >
                     <RotateCcw size={12} />
@@ -403,11 +401,11 @@ export default function Home() {
         {/* Dashboard Report View (Completed) */}
         {report && (
           <div className="space-y-8 py-6 md:py-8 animate-slide-up">
-            
+
             {/* Dashboard Header Profile Banner */}
             <div className="glass-panel p-6 rounded-3xl flex flex-col md:flex-row gap-6 items-center justify-between relative overflow-hidden">
               <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/5 rounded-full blur-3xl -z-10 animate-pulse-slow"></div>
-              
+
               <div className="flex flex-col md:flex-row gap-6 items-center md:items-start text-center md:text-left">
                 <img
                   src={report.avatar_url}
@@ -429,7 +427,7 @@ export default function Home() {
                     </a>
                   </div>
                   {report.bio && <p className="text-slate-400 text-sm max-w-2xl">{report.bio}</p>}
-                  
+
                   <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 text-xs text-slate-500 pt-2">
                     <span className="flex items-center gap-1.5"><Users size={14} /> {report.followers} Followers</span>
                     <span>•</span>
@@ -454,13 +452,12 @@ export default function Home() {
                       cx="48"
                       cy="48"
                       r="40"
-                      className={`stroke-current ${
-                        report.github_analysis.portfolio_score >= 80 
-                          ? "text-emerald-500" 
-                          : report.github_analysis.portfolio_score >= 60 
-                            ? "text-amber-500" 
+                      className={`stroke-current ${report.github_analysis.portfolio_score >= 80
+                          ? "text-emerald-500"
+                          : report.github_analysis.portfolio_score >= 60
+                            ? "text-amber-500"
                             : "text-rose-500"
-                      }`}
+                        }`}
                       strokeWidth="6"
                       fill="transparent"
                       strokeDasharray={251.2}
@@ -494,7 +491,7 @@ export default function Home() {
                 <BookOpen size={14} className="text-teal-400" />
                 Agentic Executive Summary
               </h3>
-              
+
               {/* Point-wise Executive Summary */}
               <div className="space-y-2.5">
                 {report.summary.split("\n").filter(line => line.trim()).map((line, i) => {
@@ -508,7 +505,7 @@ export default function Home() {
                   );
                 })}
               </div>
-              
+
               {/* Primary Tech Stack */}
               <div className="space-y-2 pt-2 border-t border-white/5">
                 <h4 className="text-xs font-semibold text-slate-400">Core Technologies Detected</h4>
@@ -524,7 +521,7 @@ export default function Home() {
 
             {/* Strengths & Weaknesses Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              
+
               {/* Strengths Card */}
               <div className="glass-panel p-6 rounded-3xl border-emerald-500/10">
                 <h3 className="text-sm font-bold text-emerald-400 flex items-center gap-2 border-b border-emerald-500/5 pb-3 mb-4">
@@ -574,7 +571,7 @@ export default function Home() {
                           Score: {repo.quality_score}
                         </span>
                       </div>
-                      
+
                       <p className="text-slate-400 text-xs md:text-sm leading-relaxed">
                         {formatMarkdownText(repo.review_comments)}
                       </p>
@@ -588,14 +585,13 @@ export default function Home() {
                           </span>
                         ))}
                       </div>
-                      
+
                       <div className="flex items-center gap-2">
                         <span className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">Docs:</span>
-                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${
-                          repo.documentation_rating === "Excellent" || repo.documentation_rating === "Good"
+                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${repo.documentation_rating === "Excellent" || repo.documentation_rating === "Good"
                             ? "bg-emerald-500/10 text-emerald-400"
                             : "bg-amber-500/10 text-amber-400"
-                        }`}>
+                          }`}>
                           {repo.documentation_rating}
                         </span>
                       </div>
@@ -641,12 +637,12 @@ export default function Home() {
                         {proj.bullets.map((bullet, idx) => {
                           const id = `${proj.repo_name}-${idx}`;
                           const isCopied = copiedBullet === bullet && copiedIndex === id;
-                          
+
                           return (
                             <div key={idx} className="group relative flex gap-3 text-slate-300 text-xs md:text-sm leading-relaxed p-2 hover:bg-slate-900/60 rounded-xl transition duration-150 pr-12">
                               <span className="text-indigo-400 font-bold select-none">&bull;</span>
                               <span>{formatMarkdownText(bullet)}</span>
-                              
+
                               <button
                                 onClick={() => handleCopy(bullet, id)}
                                 className="absolute right-3 top-2 opacity-0 group-hover:opacity-100 bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white p-1.5 rounded-lg border border-white/5 transition duration-150 cursor-pointer"
@@ -666,7 +662,7 @@ export default function Home() {
 
             {/* Career Advisor: Roadmap and Learning Gaps */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              
+
               {/* Timeline Roadmap */}
               <div className="glass-panel p-6 rounded-3xl md:col-span-2 space-y-6">
                 <div className="border-b border-white/5 pb-3">
@@ -684,7 +680,7 @@ export default function Home() {
                       <span className="absolute -left-[31px] top-1.5 w-4.5 h-4.5 rounded-full bg-slate-950 border-2 border-teal-500 flex items-center justify-center text-[8px] font-bold text-teal-400">
                         {step.step_number}
                       </span>
-                      
+
                       <div className="bg-slate-950/40 border border-white/5 p-4 rounded-2xl">
                         <div className="flex flex-wrap items-center justify-between gap-2">
                           <h4 className="font-bold text-sm text-slate-100">{step.topic}</h4>
@@ -692,7 +688,7 @@ export default function Home() {
                             {step.estimated_time}
                           </span>
                         </div>
-                        
+
                         <div className="mt-2 space-y-2">
                           <div className="flex flex-wrap gap-1">
                             {step.skills_to_acquire.map((skill) => (
@@ -701,7 +697,7 @@ export default function Home() {
                               </span>
                             ))}
                           </div>
-                          
+
                           <div className="text-[10px] text-slate-500 flex items-start gap-1 leading-relaxed">
                             <span className="font-semibold text-slate-400 shrink-0">Resources:</span>
                             <span>{step.recommended_resources.join(", ")}</span>
@@ -715,7 +711,7 @@ export default function Home() {
 
               {/* Skill Gap & recommended projects */}
               <div className="space-y-6">
-                
+
                 {/* Skill Gaps Card */}
                 <div className="glass-panel p-6 rounded-3xl space-y-4">
                   <h3 className="text-sm font-bold text-indigo-400 flex items-center gap-1.5 border-b border-indigo-500/5 pb-2">
@@ -742,13 +738,12 @@ export default function Home() {
                       <div key={proj.title} className="bg-slate-950/40 border border-white/5 p-4 rounded-xl space-y-2">
                         <div className="flex justify-between items-start gap-2">
                           <h4 className="font-bold text-xs text-slate-200">{proj.title}</h4>
-                          <span className={`text-[9px] font-bold px-1.5 py-0.2 rounded border ${
-                            proj.difficulty === "Advanced"
+                          <span className={`text-[9px] font-bold px-1.5 py-0.2 rounded border ${proj.difficulty === "Advanced"
                               ? "bg-rose-500/10 text-rose-400 border-rose-500/20"
                               : proj.difficulty === "Intermediate"
                                 ? "bg-amber-500/10 text-amber-400 border-amber-500/20"
                                 : "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
-                          }`}>
+                            }`}>
                             {proj.difficulty}
                           </span>
                         </div>
@@ -782,9 +777,8 @@ export default function Home() {
                   <div key={fit.role_name} className="bg-slate-950/40 border border-white/5 p-4 rounded-2xl space-y-3">
                     <div className="flex items-center justify-between gap-4">
                       <h4 className="font-bold text-sm text-slate-200">{fit.role_name}</h4>
-                      <span className={`text-xs font-extrabold ${
-                        fit.match_percentage >= 85 ? "text-emerald-400" : fit.match_percentage >= 60 ? "text-amber-400" : "text-rose-400"
-                      }`}>
+                      <span className={`text-xs font-extrabold ${fit.match_percentage >= 85 ? "text-emerald-400" : fit.match_percentage >= 60 ? "text-amber-400" : "text-rose-400"
+                        }`}>
                         {fit.match_percentage}% Match
                       </span>
                     </div>
@@ -792,9 +786,8 @@ export default function Home() {
                     {/* Progress bar */}
                     <div className="w-full bg-slate-900 rounded-full h-2 overflow-hidden">
                       <div
-                        className={`h-full rounded-full transition-all duration-1000 ${
-                          fit.match_percentage >= 85 ? "bg-emerald-500" : fit.match_percentage >= 60 ? "bg-amber-500" : "bg-rose-500"
-                        }`}
+                        className={`h-full rounded-full transition-all duration-1000 ${fit.match_percentage >= 85 ? "bg-emerald-500" : fit.match_percentage >= 60 ? "bg-amber-500" : "bg-rose-500"
+                          }`}
                         style={{ width: `${fit.match_percentage}%` }}
                       ></div>
                     </div>
