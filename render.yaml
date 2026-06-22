@@ -1,0 +1,28 @@
+services:
+  # 1. FastAPI Backend Web Service
+  - type: web
+    name: agentic-github-profile-reviewer-api
+    env: python
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: GEMINI_API_KEY
+        sync: false # Set this value in the Render Dashboard
+      - key: GITHUB_TOKEN
+        sync: false # Set this value in the Render Dashboard (Optional)
+      - key: PORT
+        value: 8000
+      - key: HOST
+        value: 0.0.0.0
+
+  # 2. Next.js Frontend Web Service
+  - type: web
+    name: agentic-github-profile-reviewer-ui
+    env: node
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    startCommand: npm run start
+    envVars:
+      - key: NEXT_PUBLIC_BACKEND_URL
+        value: https://agentic-github-profile-reviewer-api.onrender.com # Update this with your actual backend URL after deployment

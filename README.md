@@ -141,3 +141,4 @@ If you use the **Google AI Studio Free Tier**, you may occasionally hit rate lim
    Free tier limits typically reset every 60 seconds.
 3. **Switch to Paid Tier:**
    Set up billing on Google AI Studio to increase your rate limits and daily quotas.
+

@@ -170,7 +170,8 @@ export default function Home() {
       eventSourceRef.current.close();
     }
 
-    const backendUrl = `http://localhost:8000/api/review/stream?github_url=${encodeURIComponent(githubUrl)}`;
+    const backendBaseUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8000";
+    const backendUrl = `${backendBaseUrl}/api/review/stream?github_url=${encodeURIComponent(githubUrl)}`;
     const eventSource = new EventSource(backendUrl);
     eventSourceRef.current = eventSource;
 
