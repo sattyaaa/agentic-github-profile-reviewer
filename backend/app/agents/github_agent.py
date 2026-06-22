@@ -4,6 +4,7 @@ from typing import Dict, Any
 from google.adk.agents import Agent
 from google.adk.runners import InMemoryRunner
 from app.agents.types import GitHubAnalysisOutput
+from app.config import settings
 
 logger = logging.getLogger("github_agent")
 
@@ -24,7 +25,7 @@ Your output MUST conform exactly to the response schema. Keep comments construct
 def create_github_agent() -> Agent:
     return Agent(
         name="github_analysis_agent",
-        model="gemini-2.5-flash",
+        model=settings.GEMINI_MODEL,
         instruction=GITHUB_AGENT_INSTRUCTION,
         output_schema=GitHubAnalysisOutput
     )

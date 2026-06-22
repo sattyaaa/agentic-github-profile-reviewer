@@ -41,7 +41,7 @@ Format each bullet point as a markdown item starting with a dash (e.g. '- point 
 def create_coordinator_agent() -> Agent:
     return Agent(
         name="coordinator_agent",
-        model="gemini-2.5-flash",
+        model=settings.GEMINI_MODEL,
         instruction=COORDINATOR_INSTRUCTION
     )
 

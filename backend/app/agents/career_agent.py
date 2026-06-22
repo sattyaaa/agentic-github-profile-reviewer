@@ -4,6 +4,7 @@ from typing import Dict, Any
 from google.adk.agents import Agent
 from google.adk.runners import InMemoryRunner
 from app.agents.types import CareerAnalysisOutput
+from app.config import settings
 
 logger = logging.getLogger("career_agent")
 
@@ -29,7 +30,7 @@ Your output MUST conform exactly to the response schema. Keep suggestions highly
 def create_career_agent() -> Agent:
     return Agent(
         name="career_agent",
-        model="gemini-2.5-flash",
+        model=settings.GEMINI_MODEL,
         instruction=CAREER_AGENT_INSTRUCTION,
         output_schema=CareerAnalysisOutput
     )

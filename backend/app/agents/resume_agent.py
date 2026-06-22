@@ -4,6 +4,7 @@ from typing import Dict, Any
 from google.adk.agents import Agent
 from google.adk.runners import InMemoryRunner
 from app.agents.types import ResumeImprovementsOutput
+from app.config import settings
 
 logger = logging.getLogger("resume_agent")
 
@@ -22,7 +23,7 @@ Your output MUST conform exactly to the response schema. Focus on professional, 
 def create_resume_agent() -> Agent:
     return Agent(
         name="resume_agent",
-        model="gemini-2.5-flash",
+        model=settings.GEMINI_MODEL,
         instruction=RESUME_AGENT_INSTRUCTION,
         output_schema=ResumeImprovementsOutput
     )
