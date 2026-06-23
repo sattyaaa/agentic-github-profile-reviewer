@@ -1,6 +1,43 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
+
+const parseError = (errorMsg: string): { code: string; message: string } => {
+  const msg = (errorMsg || "").toLowerCase();
+  
+  if (msg.includes("429") || msg.includes("resource_exhausted") || msg.includes("quota exceeded")) {
+    return {
+      code: "429",
+      message: "Rate Limit Exceeded. The Gemini API is currently receiving too many requests. Please wait a minute before trying again."
+    };
+  }
+  if (msg.includes("503") || msg.includes("unavailable") || msg.includes("high demand")) {
+    return {
+      code: "503",
+      message: "Service Temporarily Unavailable. The AI models are currently experiencing high demand. Please try again shortly."
+    };
+  }
+  if (msg.includes("404") || msg.includes("not found")) {
+    return {
+      code: "404",
+      message: "Resource Not Found. The GitHub profile URL or backend API endpoint could not be found."
+    };
+  }
+  if (msg.includes("unable to connect") || msg.includes("failed to connect")) {
+    return {
+      code: "CONNECTION_FAILED",
+      message: "Backend Connection Refused. Please check if your FastAPI backend server is running on port 8000."
+    };
+  }
+  
+  // Default fallback
+  return {
+    code: "500",
+    message: "An unexpected error occurred during agent orchestration. Please check the backend logs."
+  };
+};
+
 import {
   Github,
   User,
@@ -126,6 +163,7 @@ const formatMarkdownText = (text: string) => {
 };
 
 export default function Home() {
+  const router = useRouter();
   const [githubUrl, setGithubUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const [currentStep, setCurrentStep] = useState<StepKey | "completed" | null>(null);
@@ -137,6 +175,15 @@ export default function Home() {
 
   const eventSourceRef = useRef<EventSource | null>(null);
   const logEndRef = useRef<HTMLDivElement | null>(null);
+
+  const handleError = (rawError: string) => {
+    const { code, message } = parseError(rawError);
+    setLoading(false);
+    if (eventSourceRef.current) {
+      eventSourceRef.current.close();
+    }
+    router.push(`/error?code=${encodeURIComponent(code)}&message=${encodeURIComponent(message)}`);
+  };
 
   // Auto-scroll progress logs to bottom
   useEffect(() => {
@@ -170,7 +217,7 @@ export default function Home() {
       eventSourceRef.current.close();
     }
 
-    const backendBaseUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8000";
+    const backendBaseUrl = (process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8000").replace(/\/$/, "");
     const backendUrl = `${backendBaseUrl}/api/review/stream?github_url=${encodeURIComponent(githubUrl)}`;
     const eventSource = new EventSource(backendUrl);
     eventSourceRef.current = eventSource;
@@ -180,9 +227,7 @@ export default function Home() {
         const data = JSON.parse(event.data);
 
         if (data.status === "failed") {
-          setError(data.message);
-          setLoading(false);
-          eventSource.close();
+          handleError(data.message);
           return;
         }
 
@@ -202,17 +247,13 @@ export default function Home() {
         }
       } catch (err) {
         console.error("Failed to parse SSE data", err);
-        setError("Invalid stream response from backend server.");
-        setLoading(false);
-        eventSource.close();
+        handleError("Invalid stream response from backend server.");
       }
     };
 
     eventSource.onerror = (err) => {
       console.error("SSE connection error", err);
-      setError("Unable to connect to the backend server. Make sure FastAPI is running on port 8000.");
-      setLoading(false);
-      eventSource.close();
+      handleError("Unable to connect to the backend server. Make sure FastAPI is running on port 8000.");
     };
   };
 
@@ -378,23 +419,7 @@ export default function Home() {
               <div ref={logEndRef}></div>
             </div>
 
-            {/* Error Message */}
-            {error && (
-              <div className="mt-6 bg-rose-500/10 border border-rose-500/20 text-rose-400 rounded-2xl p-4 flex items-start gap-3">
-                <ShieldAlert size={20} className="shrink-0 mt-0.5" />
-                <div>
-                  <h5 className="font-bold text-sm">Execution Error</h5>
-                  <p className="text-xs mt-1">{error}</p>
-                  <button
-                    onClick={handleReset}
-                    className="mt-3 text-xs bg-rose-500/20 hover:bg-rose-500/30 text-rose-400 px-3 py-1.5 rounded-lg font-bold transition flex items-center gap-1.5 border border-rose-500/30 cursor-pointer"
-                  >
-                    <RotateCcw size={12} />
-                    Try Again
-                  </button>
-                </div>
-              </div>
-            )}
+
           </div>
         )}
 
