@@ -12,7 +12,7 @@ class Settings:
     GITHUB_TOKEN: str = os.getenv("GITHUB_TOKEN", "")
     
     # Model configuration
-    GEMINI_MODEL: str = os.getenv("GEMINI_MODEL", "gemini-2.5-flash-8b")
+    GEMINI_MODEL: str = os.getenv("GEMINI_MODEL", "gemini-1.5-flash-8b")
     
     # Server configuration
     PORT: int = int(os.getenv("PORT", "8000"))
