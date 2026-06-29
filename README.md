@@ -1,5 +1,7 @@
 # Agentic GitHub Profile Reviewer
 
+**🔗 Live Demo:** [https://agentic-github-profile-reviewer.onrender.com/](https://agentic-github-profile-reviewer.onrender.com/)
+
 A modern, multi-agent AI system built using **Google ADK (Agent Development Kit)** and **Google Gemini** that reviews developer GitHub portfolios, highlights technical strengths, generates ATS-friendly STAR resume bullets, maps personalized skill roadmaps, and analyzes developer career role fits.
 
 ---
@@ -12,27 +14,17 @@ The application uses an orchestration model where a **Lead Coordinator Agent** m
 
 ```mermaid
 graph TD
-    User([User / Browser]) -->|1. Submit GitHub URL| FE[Next.js Frontend]
-    FE -->|2. SSE Connection| BE[FastAPI Backend]
+    Frontend[Next.js Frontend] -->|1. Submit GitHub URL| Backend[FastAPI Backend]
+    Backend -->|2. Scrape Profile & Repos| GitHub[GitHub API]
     
-    subgraph Backend Pipeline
-        BE -->|3. Scrape profile & repos| GHService[GitHub Service]
-        GHService -->|4. Profile Metadata & Code context| Coordinator[Coordinator Agent]
-        
-        Coordinator -->|5. Request Portfolio Audit| GHAgent[GitHub Analysis Agent]
-        GHAgent -.->|6. Codebase Scores & Tech Stack| Coordinator
-        
-        Coordinator -->|7. Request Resume STAR Bullets| ResumeAgent[Resume Agent]
-        ResumeAgent -.->|8. General improvements & STAR Bullets| Coordinator
-        
-        Coordinator -->|9. Request Career Analysis| CareerAgent[Career Agent]
-        CareerAgent -.->|10. Skill Gaps & Roadmap steps| Coordinator
-        
-        Coordinator -->|11. Consolidate & Synthesize| Synth[Synthesis Step]
-        Synth -->|12. Stream JSON events| BE
+    subgraph Orchestrator Pipeline
+        Backend --> Coordinator[Lead Coordinator Agent]
+        Coordinator --> GHAgent[GitHub Analysis Agent]
+        Coordinator --> ResumeAgent[Resume Agent]
+        Coordinator --> CareerAgent[Career Agent]
     end
     
-    BE -->|13. Stream Progress Logs & Final Result| FE
+    Coordinator -->|3. Stream Real-Time Results| Frontend
 ```
 
 ---
