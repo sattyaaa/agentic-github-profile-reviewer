@@ -15,7 +15,7 @@ The application uses an orchestration model where a **Lead Coordinator Agent** m
 ```mermaid
 graph TD
     Frontend[Next.js Frontend] -->|1. Submit GitHub URL| Backend[FastAPI Backend]
-    Backend -->|2. Scrape Profile & Repos| GitHub[GitHub API]
+    Backend <-->|2. Scrape Profile & Repos| GitHub[GitHub API]
     
     subgraph Orchestrator Pipeline
         Backend --> Coordinator[Lead Coordinator Agent]
